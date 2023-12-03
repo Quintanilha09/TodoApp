@@ -1,9 +1,13 @@
 const express = require('express')
+const exphbs = require('express-handlebars')
 
 const app = express()
 
-app.post('/', (requisicao, resposta) => {
-    resposta.send("Olá mundo")    
+app.engine('handlebars', exphbs.engine())
+app.set('view engine', 'handlebars')
+
+app.get('/', (requisicao, resposta) => {
+    resposta.render("home")    
 })
 
 app.listen(3000, () => {
