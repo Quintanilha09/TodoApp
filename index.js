@@ -138,7 +138,7 @@ app.get('/ativas', (requisicao, resposta) => {
             return console.log(erro)
         }
 
-        const tarefas = dados.map((dados) => {
+        const tarefas = dados.map((dado) => {
             return {
                 id: dado.id,
                 descricao: dado.descricao,
@@ -146,7 +146,7 @@ app.get('/ativas', (requisicao, resposta) => {
             }
         })
         
-        const quantidadeTarefasAtivas = tarefas.lenght
+        const quantidadeTarefas = tarefas.lenght
 
         resposta.render('ativas', {tarefas, quantidadeTarefas})
     })
