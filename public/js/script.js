@@ -30,8 +30,6 @@ function excluirTarefa(id) {
             },
             body: JSON.stringify({id})
         })
-
-        window.location.reload()
 }
 
 function alterarTema() {

@@ -16,6 +16,19 @@ app.use(express.urlencoded({
 
 app.use(express.json())
 
+//rotas
+app.get('/limparTarefas', (requisicao, resposta) => {
+    const sql = 'DELETE FROM tarefas'
+    
+    conexao.query(sql, (erro) => {
+        if (erro) {
+            return console.log(erro)
+        }
+        
+        resposta.redirect('/')
+    })
+})
+
 app.post('/excluir', (requisicao, resposta) => {
     const id = requisicao.body.id
     
@@ -31,19 +44,6 @@ app.post('/excluir', (requisicao, resposta) => {
             
             resposta.redirect("/")
         })
-})
-
-//rotas
-app.get('limparTarefas', (requisicao, resposta) => {
-    const sql = 'DELETE FROM tarefas'
-    
-    conexao.query(sql, (erro) => {
-        if (erro) {
-            return console.log(erro)
-        }
-        
-        resposta.redirect('/')
-    })
 })
 
 app.post('/completar', (requisicao, resposta) => {
@@ -67,8 +67,6 @@ app.post('/completar', (requisicao, resposta) => {
 app.post('/descompletar', (requisicao, resposta) => {
     const id = requisicao.body.id
 
-    console.log(id)
-
     const sql = `
         UPDATE tarefas
         SET completa = '0'
@@ -90,7 +88,7 @@ app.post('/criar', (requisicao, resposta) => {
 
     const sql = `
         INSERT INTO tarefas(descricao, completa)
-        VALUES ('${descricao}', '${completa})
+        VALUES ('${descricao}', '${completa}')
     `
 
     conexao.query(sql, (erro) => {
@@ -121,7 +119,7 @@ app.get('/completas', (requisicao, resposta) => {
             }
         })
         
-        const quantidadeTarefas = tarefas.lenght
+        const quantidadeTarefas = tarefas.length
 
         resposta.render('completas', {tarefas, quantidadeTarefas})
     })
@@ -130,7 +128,7 @@ app.get('/completas', (requisicao, resposta) => {
 app.get('/ativas', (requisicao, resposta) => {
     const sql = `
         SELECT * FROM tarefas
-        WHERE completa = 0
+        WHERE completa = '0'
     `
 
     conexao.query(sql, (erro, dados) => {
@@ -146,7 +144,7 @@ app.get('/ativas', (requisicao, resposta) => {
             }
         })
         
-        const quantidadeTarefas = tarefas.lenght
+        const quantidadeTarefas = tarefas.length
 
         resposta.render('ativas', {tarefas, quantidadeTarefas})
     })
@@ -160,7 +158,7 @@ app.get('/', (requisicao, resposta) => {
             return console.error(erro)
         }
 
-        const tarefas = dados.map((dados) => {
+        const tarefas = dados.map((dado) => {
             return {
                 id: dado.id,
                 descricao: dado.descricao,
@@ -168,11 +166,11 @@ app.get('/', (requisicao, resposta) => {
             }
         })
 
-        const tarefasAtivas = tarefas.filter((tarefas) => {
+        const tarefasAtivas = tarefas.filter((tarefa) => {
             return tarefa.completa === false && tarefa
         })
 
-        const quantidadeTarefasAtivas = tarefasAtivas.lenght
+        const quantidadeTarefasAtivas = tarefasAtivas.length
 
         resposta.render("home", {tarefas, quantidadeTarefasAtivas}) 
     })   
@@ -183,7 +181,7 @@ const conexao = mysql.createConnection({
     user: "root",
     password: "root",
     database: "todoapp",
-    port: 3306
+    port: 3307
 })
 
 conexao.connect((error) => {
